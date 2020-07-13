@@ -1,6 +1,5 @@
 # Fork [fancyss - 科学上网](https://hq450.github.io/fancyss/) 后修改 fancyss_arm384 以支持 Trojan , 测试机型为 ASUS AC66U-B1
 
-# [fancyss - 科学上网](https://hq450.github.io/fancyss/)
 
 > Fancyss is a project providing tools to across the GFW on asuswrt/merlin/openwrt based router with software center. 
 >
