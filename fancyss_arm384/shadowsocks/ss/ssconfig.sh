@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# shadowsocks script for koolshare merlin armv7l 384 router with kernel 2.6.36.4
+# shadowsocks script for HND/AXHND router with kernel 4.1.27/4.1.51 merlin firmware
 
 source /koolshare/scripts/ss_base.sh
 #-----------------------------------------------
@@ -11,6 +11,8 @@ LOG_FILE=/tmp/upload/ss_log.txt
 CONFIG_FILE=/koolshare/ss/ss.json
 V2RAY_CONFIG_FILE_TMP="/tmp/v2ray_tmp.json"
 V2RAY_CONFIG_FILE="/koolshare/ss/v2ray.json"
+TROJAN_CONFIG_FILE="/koolshare/ss/trojan.json"
+TROJAN2_CONFIG_FILE="/koolshare/ss/trojan2.json"
 LOCK_FILE=/var/lock/koolss.lock
 DNSF_PORT=7913
 DNSC_PORT=53
@@ -96,6 +98,9 @@ __get_type_full_name() {
 	3)
 		echo "v2ray"
 		;;
+	4)
+		echo "trojan"
+		;;
 	esac
 }
 
@@ -112,6 +117,9 @@ __get_type_abbr_name() {
 		;;
 	3)
 		echo "v2ray"
+		;;
+	4)
+		echo "trojan"
 		;;
 	esac
 }
@@ -221,6 +229,7 @@ restore_conf() {
 	rm -rf /tmp/wblist.conf
 	rm -rf /tmp/ss_host.conf
 	rm -rf /tmp/smartdns.conf
+	rm -rf /tmp/gfwlist.txt
 }
 
 kill_process() {
@@ -271,6 +280,11 @@ kill_process() {
 		echo_date 关闭chinadns1进程...
 		killall chinadns1 >/dev/null 2>&1
 	fi
+	chinadnsNG_process=$(pidof chinadns-ng)
+	if [ -n "$chinadnsNG_process" ]; then
+		echo_date 关闭chinadns-ng进程...
+		killall chinadns-ng >/dev/null 2>&1
+	fi
 	cdns_process=$(pidof cdns)
 	if [ -n "$cdns_process" ]; then
 		echo_date 关闭cdns进程...
@@ -296,10 +310,10 @@ kill_process() {
 		echo_date 关闭pdu进程...
 		kill -9 $pdu >/dev/null 2>&1
 	fi
-	client_linux_arm5_process=$(pidof client_linux_arm7)
-	if [ -n "$client_linux_arm5_process" ]; then
+	client_linux_arm7_process=$(pidof client_linux_arm7)
+	if [ -n "$client_linux_arm7_process" ]; then
 		echo_date 关闭kcp协议进程...
-		killall client_linux_arm5 >/dev/null 2>&1
+		killall client_linux_arm7 >/dev/null 2>&1
 	fi
 	haproxy_process=$(pidof haproxy)
 	if [ -n "$haproxy_process" ]; then
@@ -331,6 +345,12 @@ kill_process() {
 		echo_date 关闭haveged进程...
 		killall haveged >/dev/null 2>&1
 	fi
+	trojan_process=$(pidof trojan)
+	if [ -n "$trojan_process" ];then 
+		echo_date 关闭trojan进程...
+		killall trojan >/dev/null 2>&1
+	fi
+	
 }
 
 # ================================= ss prestart ===========================
@@ -356,7 +376,7 @@ ss_pre_start() {
 
 resolv_server_ip() {
 	local tmp server_ip
-	if [ "$ss_basic_type" == "3" ] && [ "$ss_basic_v2ray_use_json" == "1" ]; then
+	if [ "$ss_basic_type" == "3" ] && [ "$ss_basic_v2ray_use_json" == "1" ] || [ "$ss_basic_type" == "4" ] ; then
 		#v2ray json配置在后面单独处理
 		return 1
 	else
@@ -527,6 +547,9 @@ get_dns_name() {
 	9)
 		echo "SmartDNS"
 		;;
+	10)
+		echo "chinadns-ng"
+		;;
 	esac
 }
 
@@ -662,6 +685,17 @@ start_dns() {
 		fi
 	fi
 
+	#start chinadns_ng
+	if [ "$ss_foreign_dns" == "10" ]; then
+		start_sslocal
+		echo_date 开启dns2socks，用于chinadns-ng的国外上游...
+		dns2socks 127.0.0.1:23456 "$ss_chinadns1_user" 127.0.0.1:1055 >/dev/null 2>&1 &
+		[ "$DNS_PLAN" == "1" ] && echo_date "开启chinadns-ng，用于【国内所有网站 + 国外gfwlist站点】的DNS解析..."
+		[ "$DNS_PLAN" == "2" ] && echo_date "开启chinadns-ng，用于【国内所有网站 + 国外所有网站】的DNS解析..."
+		cat /koolshare/ss/rules/gfwlist.conf|sed '/^server=/d'|sed 's/ipset=\/.//g'|sed 's/\/gfwlist//g' > /tmp/gfwlist.txt
+		chinadns-ng -l ${DNSF_PORT} -c ${CDN}#${DNSC_PORT} -t 127.0.0.1#1055 -g /tmp/gfwlist.txt -m /koolshare/ss/rules/cdn.txt -M >/dev/null 2>&1 &
+	fi
+
 	#start https_dns_proxy
 	if [ "$ss_foreign_dns" == "6" ]; then
 		[ "$DNS_PLAN" == "1" ] && echo_date "开启https_dns_proxy，用于【国外gfwlist站点】的DNS解析..."
@@ -702,19 +736,34 @@ start_dns() {
 		# 国内国外都启用SmartDNS （此情况下，如果是gfwlist模式则不用cdn.conf；如果是大陆白名单模式也不需要使用cdn.conf）
 		[ "$DNS_PLAN" == "1" ] && echo_date "开启SmartDNS，用于【国内所有网站 + 国外gfwlist站点】的DNS解析..."
 		[ "$DNS_PLAN" == "2" ] && echo_date "开启SmartDNS，用于【国内所有网站 + 国外所有网站】的DNS解析..."
-		sed '/^#/d /^$/d' /koolshare/ss/rules/smartdns_template.conf > /tmp/smartdns.conf
+		#if [ "$(nvram get ipv6_service)" == "disabled" ]; then
+		#	sed 's/# force-AAAA-SOA yes/force-AAAA-SOA yes/g' /koolshare/ss/rules/smartdns_template.conf > /tmp/smartdns.conf
+		#	sed -i '/^#/d /^$/d' /tmp/smartdns.conf
+		#else
+			sed '/^#/d /^$/d' /koolshare/ss/rules/smartdns_template.conf > /tmp/smartdns.conf
+		#fi
 		smartdns -c /tmp/smartdns.conf >/dev/null 2>&1 &
 	elif [ "$ss_dns_china" == "13" ] && [ "$ss_foreign_dns" != "9" ]; then
 		# 国内启用SmartDNS，国外不启用SmartDNS （此情况下，如果是gfwlist模式则不用cdn.conf；如果是大陆白名单模式则是根据国外DNS的选择而决定是否使用cdn.conf）
 		[ "$DNS_PLAN" == "1" ] && echo_date "开启SmartDNS，用于【国内所有网站】的DNS解析..."
 		[ "$DNS_PLAN" == "2" ] && echo_date "开启SmartDNS，用于【国内cdn网站】的DNS解析..."
-		sed '/^#/d /^$/d /foreign/d' /koolshare/ss/rules/smartdns_template.conf > /tmp/smartdns.conf
+		#if [ "$(nvram get ipv6_service)" == "disabled" ]; then
+		#	sed 's/# force-AAAA-SOA yes/force-AAAA-SOA yes/g' /koolshare/ss/rules/smartdns_template.conf > /tmp/smartdns.conf
+		#	sed -i '/^#/d /^$/d /foreign/d' /tmp/smartdns.conf
+		#else
+			sed '/^#/d /^$/d /foreign/d' /koolshare/ss/rules/smartdns_template.conf > /tmp/smartdns.conf
+		#fi
 		smartdns -c /tmp/smartdns.conf >/dev/null 2>&1 &
 	elif [ "$ss_dns_china" != "13" ] && [ "$ss_foreign_dns" == "9" ]; then
 		# 国内不启用SmartDNS，国外启用SmartDNS （此情况下，如果是gfwlist模式则不用cdn.conf；如果是大陆白名单模式则需要使用cdn.conf）
 		[ "$DNS_PLAN" == "1" ] && echo_date "开启SmartDNS，用于【国外gfwlist站点】的DNS解析..."
 		[ "$DNS_PLAN" == "2" ] && echo_date "开启SmartDNS，用于【国外所有网站】的DNS解析..."
-		sed '/^#/d /^$/d /china/d' /koolshare/ss/rules/smartdns_template.conf > /tmp/smartdns.conf
+		#if [ "$(nvram get ipv6_service)" == "disabled" ]; then
+		#	sed 's/# force-AAAA-SOA yes/force-AAAA-SOA yes/g' /koolshare/ss/rules/smartdns_template.conf > /tmp/smartdns.conf
+		#	sed -i '/^#/d /^$/d /china/d' /tmp/smartdns.conf
+		#else
+			sed '/^#/d /^$/d /china/d' /koolshare/ss/rules/smartdns_template.conf > /tmp/smartdns.conf
+		#fi
 		smartdns -c /tmp/smartdns.conf >/dev/null 2>&1 &
 	fi
 
@@ -789,6 +838,7 @@ create_dnsmasq_conf() {
 	rm -rf /tmp/custom.conf
 	rm -rf /tmp/wblist.conf
 	rm -rf /tmp/gfwlist.conf
+	rm -rf /tmp/gfwlist.txt
 	rm -rf /jffs/configs/dnsmasq.d/custom.conf
 	rm -rf /jffs/configs/dnsmasq.d/wblist.conf
 	rm -rf /jffs/configs/dnsmasq.d/cdn.conf
@@ -915,7 +965,7 @@ create_dnsmasq_conf() {
 		else
 			# 其它情况，均使用国外优先模式，以下区分是否加载cdn.conf
 			# if [ "$ss_foreign_dns" == "2" ] || [ "$ss_foreign_dns" == "5" ] || [ "$ss_foreign_dns" == "9" -a "$ss_dns_china" == "13" ]; then
-			if [ "$ss_foreign_dns" == "2" ] || [ "$ss_foreign_dns" == "5" -a "$ss_dns_china" != "13" ]; then
+			if [ "$ss_foreign_dns" == "2" ] || [ "$ss_foreign_dns" == "5" -a "$ss_dns_china" != "13" ] || [ "$ss_foreign_dns" == "10" ]; then
 				# 因为chinadns1 chinadns2自带国内cdn，所以也不需要cdn.conf
 				echo_date 自动判断dns解析使用国外优先模式...
 				echo_date 国外解析方案【$(get_dns_name $ss_foreign_dns)】自带国内cdn，无需加载cdn.conf，路由器开销小...
@@ -994,14 +1044,14 @@ start_kcp() {
 
 			start-stop-daemon -S -q -b -m \
 				-p /tmp/var/kcp.pid \
-			-x /koolshare/bin/client_linux_arm5 \
+				-x /koolshare/bin/client_linux_arm7 \
 				-- -l 127.0.0.1:1091 \
 				-r $ss_basic_kcp_server:$ss_basic_kcp_port \
 				$KCP_CRYPT $KCP_KEY $KCP_SNDWND $KCP_RNDWND $KCP_MTU $KCP_CONN $COMP $KCP_MODE $ss_basic_kcp_extra
 		else
 			start-stop-daemon -S -q -b -m \
 				-p /tmp/var/kcp.pid \
-				-x /koolshare/bin/client_linux_arm5 \
+				-x /koolshare/bin/client_linux_arm7 \
 				-- -l 127.0.0.1:1091 \
 				-r $ss_basic_kcp_server:$ss_basic_kcp_port \
 				$ss_basic_kcp_parameter
@@ -1026,7 +1076,7 @@ start_speeder() {
 		if [ "$ss_basic_udp_boost_enable" == "1" ]; then
 			if [ "$ss_basic_udp_software" == "1" ]; then
 				echo_date 开启UDPspeederV1进程.
-				[ -z "$ss_basic_udpv1_rserver" ] && ss_basic_udpv1_rserver="$ss_basic_server_ip"
+				[ -z "$ss_basic_udpv1_rserver" ] && ss_basic_udpv1_rserver="$ss_basic_server"
 				[ -n "$ss_basic_udpv1_duplicate_time" ] && duplicate_time="-t $ss_basic_udpv1_duplicate_time" || duplicate_time=""
 				[ -n "$ss_basic_udpv1_jitter" ] && jitter="-j $ss_basic_udpv1_jitter" || jitter=""
 				[ -n "$ss_basic_udpv1_report" ] && report="--report $ss_basic_udpv1_report" || report=""
@@ -1046,7 +1096,7 @@ start_speeder() {
 				fi
 			elif [ "$ss_basic_udp_software" == "2" ]; then
 				echo_date 开启UDPspeederV2进程.
-				[ -z "$ss_basic_udpv2_rserver" ] && ss_basic_udpv2_rserver="$ss_basic_server_ip"
+				[ -z "$ss_basic_udpv2_rserver" ] && ss_basic_udpv2_rserver="$ss_basic_server"
 				[ "$ss_basic_udpv2_disableobscure" == "1" ] && disable_obscure="--disable-obscure" || disable_obscure=""
 				[ "$ss_basic_udpv2_disablechecksum" == "1" ] && disable_checksum="--disable-checksum" || disable_checksum=""
 				[ -n "$ss_basic_udpv2_timeout" ] && timeout="--timeout $ss_basic_udpv2_timeout" || timeout=""
@@ -1073,7 +1123,6 @@ start_speeder() {
 		#开启udp2raw
 		if [ "$ss_basic_udp2raw_boost_enable" == "1" ]; then
 			echo_date 开启UDP2raw进程.
-			[ -z "$ss_basic_udp2raw_rserver" ] && ss_basic_udp2raw_rserver="$ss_basic_server_ip"
 			[ "$ss_basic_udp2raw_a" == "1" ] && UD2RAW_EX1="-a" || UD2RAW_EX1=""
 			[ "$ss_basic_udp2raw_keeprule" == "1" ] && UD2RAW_EX2="--keep-rule" || UD2RAW_EX2=""
 			[ -n "$ss_basic_udp2raw_lowerlevel" ] && UD2RAW_LOW="--lower-level $ss_basic_udp2raw_lowerlevel" || UD2RAW_LOW=""
@@ -1196,10 +1245,124 @@ start_ss_redir() {
 
 	start_speeder
 }
+creat_trojan_json(){
+	if [ -n "$WAN_ACTION" ]; then
+		echo_date "检测到网络拨号/开机触发启动，不创建$(__get_type_abbr_name)配置文件，使用上次的配置文件！"
+		return 0
+	elif [ -n "$NAT_ACTION" ]; then
+		echo_date "检测到防火墙重启触发启动，不创建$(__get_type_abbr_name)配置文件，使用上次的配置文件！"
+		return 0
+	else
+		echo_date "创建$(__get_type_abbr_name)配置文件到$TROJAN_CONFIG_FILE"
+	fi
+		rm -rf "$TROJAN_CONFIG_FILE"
+		rm -rf "$TROJAN2_CONFIG_FILE"
+		if [ "$ss_basic_type" == "4" ]; then
+		cat > "$TROJAN_CONFIG_FILE" <<-EOF
+		{
+			"local_addr": "0.0.0.0",
+			"local_port": 3333,
+			"log_level": "1",
+			"password": [
+				"$ss_basic_password"
+			],
+			"remote_addr": "$ss_basic_server",
+			"remote_port": $ss_basic_port,
+			"run_type": "nat",
+			"ssl": {
+				"alpn": [
+					"h2",
+					"http/1.1"
+				],
+				"cert": "",
+				"cipher": "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES128-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA:AES128-SHA:AES256-SHA:DES-CBC3-SHA",
+				"cipher_tls13": "TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384",
+				"curves": "",
+				"reuse_session": false,
+				"session_ticket": false,
+				"sni": "",
+				"verify": false,
+				"verify_hostname": true
+			},
+			"tcp": {
+				"fast_open": true,
+				"fast_open_qlen": 20,
+				"keep_alive": true,
+				"no_delay": true,
+				"reuse_port": false
+			}
+		}
+			EOF
+		cat > "$TROJAN2_CONFIG_FILE" <<-EOF
+		{
+			"local_addr": "127.0.0.1",
+			"local_port": 23456,
+			"log_level": "1",
+			"password": [
+				"$ss_basic_password"
+			],
+			"remote_addr": "$ss_basic_server",
+			"remote_port": $ss_basic_port,
+			"run_type": "client",
+			"ssl": {
+				"alpn": [
+					"h2",
+					"http/1.1"
+				],
+				"cert": "",
+				"cipher": "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES128-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA:AES128-SHA:AES256-SHA:DES-CBC3-SHA",
+				"cipher_tls13": "TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384",
+				"curves": "",
+				"reuse_session": false,
+				"session_ticket": false,
+				"sni": "",
+				"verify": false,
+				"verify_hostname": true
+			},
+			"tcp": {
+				"fast_open": true,
+				"fast_open_qlen": 20,
+				"keep_alive": true,
+				"no_delay": true,
+				"reuse_port": false
+			}
+		}
+			EOF
+			echo_date trojan配置文件生成成功.
+		else
+			echo_date trojan配置文件生成失败，请检查设置!!!
+		fi
 
+}
+
+start_trojan(){
+	echo_date 开启trojan主进程...
+	cd /koolshare/bin
+	#/jffs/softcenter/bin/trojan -c /jffs/softcenter/ss/trojan.json -l /jffs/softcenter/ss/trojan.log >/dev/null 2>&1 &
+	/koolshare/bin/trojan -c /koolshare/ss/trojan.json >/dev/null 2>&1 &
+	/koolshare/bin/trojan -c /koolshare/ss/trojan2.json >/dev/null 2>&1 &
+	local trojanpid
+	local i=10
+	until [ -n "$trojanpid" ]; do
+		i=$(($i - 1))
+		trojanpid=$(pidof trojan)
+		if [ "$i" -lt 1 ];then
+			echo_date "trojan进程启动失败！"
+			close_in_five
+		fi
+		sleep 1
+	done
+	echo_date trojan启动成功，pid：$trojanpid
+}
 fire_redir() {
 	[ "$ss_basic_type" == "0" ] && [ "$ss_basic_mcore" == "1" ] && local ARG_1="--reuse-port" || local ARG_1=""
 	local ARG_2=""
+	#if [ "$ss_basic_type" == "0" ] && [ "$ss_basic_tfo" == "1" ]; then
+	#	local ARG_2="--fast-open"
+	#	echo_date $BIN开启tcp fast open支持.
+	#	echo 3 >/proc/sys/net/ipv4/tcp_fastopen
+	#fi
+
 	if [ "$ss_basic_type" == "0" ] && [ "$ss_basic_tnd" == "1" ]; then
 		echo_date $BIN开启TCP_NODELAY支持.
 		local ARG_3="--no-delay"
@@ -1207,9 +1370,16 @@ fire_redir() {
 		local ARG_3=""
 	fi
 
-
-	cmd $1 -f /var/run/ss.pid
-
+	if [ "$ss_basic_mcore" == "1" ]; then
+		echo_date $BIN开启$THREAD线程支持.
+		local i=1
+		while [ $i -le $THREAD ]; do
+			cmd $1 $ARG_1 $ARG_2 $ARG_3 -f /var/run/ss_$i.pid
+			let i++
+		done
+	else
+		cmd $1 -f /var/run/ss.pid
+	fi
 }
 
 start_koolgame() {
@@ -1650,6 +1820,12 @@ creat_v2ray_json() {
 }
 
 start_v2ray() {
+	# tfo start
+	#if [ "$ss_basic_tfo" == "1" ]; then
+	#	echo_date 开启tcp fast open支持.
+	#	echo 3 >/proc/sys/net/ipv4/tcp_fastopen
+	#fi
+
 	# v2ray start
 	cd /koolshare/bin
 	#export GOGC=30
@@ -1700,7 +1876,7 @@ kill_cron_job() {
 }
 #--------------------------------------nat part begin------------------------------------------------
 load_tproxy() {
-	MODULES="nf_tproxy_core xt_TPROXY xt_socket xt_comment"
+	MODULES="xt_TPROXY xt_socket xt_comment"
 	OS=$(uname -r)
 	# load Kernel Modules
 	echo_date 加载TPROXY模块，用于udp转发...
@@ -1722,7 +1898,7 @@ load_tproxy() {
 		fi
 	done
 
-	if [ $modules_loaded -ne 3 ]; then
+	if [ $modules_loaded -ne 2 ]; then
 		echo "One or more modules are missing, only $((modules_loaded + 1)) are loaded. Can't start."
 		close_in_five
 	fi
@@ -2052,6 +2228,12 @@ restart_dnsmasq() {
 		nvram set dns_local_cache=1
 		nvram commit
 	fi
+	# 这是个官改固件
+	if [ -z "$DLC" ]; then
+		cat >/etc/resolv.conf <<-EOF
+			nameserver 127.0.0.1
+		EOF
+	fi
 	# Restart dnsmasq
 	echo_date 重启dnsmasq服务...
 	service restart_dnsmasq >/dev/null 2>&1
@@ -2197,31 +2379,35 @@ ss_pre_stop() {
 }
 
 detect() {
-	MODEL=$(nvram get model)
+	local MODEL=$(nvram get productid)
 	# 检测jffs2脚本是否开启，如果没有开启，将会影响插件的自启和DNS部分（dnsmasq.postconf）
 	#if [ "$MODEL" != "GT-AC5300" ];then
-	# 判断为merlin固件，需要开启jffs2_scripts
-	if [ "$(nvram get jffs2_scripts)" != "1" ]; then
-		echo_date "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-		echo_date "+     发现你未开启Enable JFFS custom scripts and configs选项！     +"
-		echo_date "+    【软件中心】和【科学上网】插件都需要此项开启才能正常使用！！         +"
-		echo_date "+     请前往【系统管理】- 【系统设置】去开启，并重启路由器后重试！！      +"
-		echo_date "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-		close_in_five
+	# 判断为非官改固件的，即merlin固件，需要开启jffs2_scripts，官改固件不需要开启
+	if [ -z "$(nvram get extendno | grep koolshare)" ]; then
+		if [ "$(nvram get jffs2_scripts)" != "1" ]; then
+			echo_date "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+			echo_date "+     发现你未开启Enable JFFS custom scripts and configs选项！     +"
+			echo_date "+    【软件中心】和【科学上网】插件都需要此项开启才能正常使用！！         +"
+			echo_date "+     请前往【系统管理】- 【系统设置】去开启，并重启路由器后重试！！      +"
+			echo_date "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+			close_in_five
+		fi
 	fi
 
-	#检测v2ray模式下是否启用虚拟内存并给出建议，不强制要求
-	if [ "$ss_basic_type" == "3" -a -z "$WAN_ACTION" ];then
-		SWAPSTATUS=$(free | grep Swap | awk '{print $2}')
-		if [ "$SWAPSTATUS" != "0" ];then
-			echo_date "你选择了v2ray节点，当前系统已经启用虚拟内存！！"
-		else
-			echo_date "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-			echo_date "+          你选择了v2ray节点，而当前系统未启用虚拟内存！               +"
-			echo_date "+        v2ray程序对路由器开销极大，请挂载虚拟内存后再开启！            +"
-			echo_date "+       如果使用 ws + tls + web 方案，建议1G虚拟内存，以保证稳定！     +"
-			echo_date "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-			#close_in_five
+	#检测v2ray模式下是否启用虚拟内存
+	if [ "$ss_basic_type" == "3" -a -z "$WAN_ACTION" ]; then
+		if [ "$MODEL" == "RT-AC86U" -o "$MODEL" == "TUF-AX3000" ]; then
+			SWAPSTATUS=$(free | grep Swap | awk '{print $2}')
+			if [ "$SWAPSTATUS" != "0" ]; then
+				echo_date "你选择了v2ray节点，当前系统已经启用虚拟内存！！符合启动条件！"
+			else
+				echo_date "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+				echo_date "+          你选择了v2ray节点，而当前系统未启用虚拟内存！               +"
+				echo_date "+        v2ray程序对路由器开销极大，请挂载虚拟内存后再开启！            +"
+				echo_date "+       如果使用 ws + tls + web 方案，建议1G虚拟内存，以保证稳定！     +"
+				echo_date "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+				close_in_five
+			fi
 		fi
 	fi
 
@@ -2361,6 +2547,8 @@ disable_ss() {
 }
 
 apply_ss() {
+	# router is on boot
+	WAN_ACTION=`ps|grep /jffs/scripts/wan-start|grep -v grep`
 	ss_pre_stop
 	# now stop first
 	echo_date ======================= 梅林固件 - 【科学上网】 ========================
@@ -2389,11 +2577,13 @@ apply_ss() {
 	creat_ipset
 	create_dnsmasq_conf
 	# do not re generate json on router start, use old one
-	[ "$ss_basic_type" != "3" ] && creat_ss_json
-	[ "$ss_basic_type" = "3" ] && creat_v2ray_json
+	[ -z "$WAN_ACTION" ] && [ "$ss_basic_type" != "3" ] && [ "$ss_basic_type" != "4" ] && creat_ss_json
+	[ -z "$WAN_ACTION" ] && [ "$ss_basic_type" = "3" ] && creat_v2ray_json
+	[ -z "$WAN_ACTION" ] && [ "$ss_basic_type" = "4" ] && creat_trojan_json
 	[ "$ss_basic_type" == "0" ] || [ "$ss_basic_type" == "1" ] && start_ss_redir
 	[ "$ss_basic_type" == "2" ] && start_koolgame
 	[ "$ss_basic_type" == "3" ] && start_v2ray
+	[ "$ss_basic_type" == "4" ] && start_trojan
 	[ "$ss_basic_type" != "2" ] && start_kcp
 	[ "$ss_basic_type" != "2" ] && start_dns
 	#===load nat start===
@@ -2408,8 +2598,6 @@ apply_ss() {
 	write_numbers
 	# post-start
 	ss_post_start
-	#httping_check
-	#[ "$?" == "1" ] && return 1
 	check_status
 	echo_date ------------------------ 【科学上网】 启动完毕 ------------------------
 }
