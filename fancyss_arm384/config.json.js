@@ -1,10 +1,10 @@
 {
-"build_date":"2020-12-11_17:04:03",
+"build_date":"2020-12-11_21:12:08",
 "description":"科学上网",
 "home_url":"Module_shadowsocks.asp",
-"md5":"024fc596316912a8900d9ab373c29d4d",
+"md5":"788fea22fbc378b1f8515f5a5167ef82",
 "name":"shadowsocks",
 "tar_url": "https://raw.githubusercontent.com/alalbb313/ss-trojan/master/fancyss_arm384/shadowsocks.tar.gz", 
 "title":"科学上网",
-"version":"1.0.4.2"
+"version":"1.0.6"
 }
