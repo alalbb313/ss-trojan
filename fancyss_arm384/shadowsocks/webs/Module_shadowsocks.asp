@@ -2123,7 +2123,7 @@ function version_show() {
 	if(!db_ss["ss_basic_version_local"]) db_ss["ss_basic_version_local"] = "0.0.0"
 	$("#ss_version_show").html("<a class='hintstyle' href='javascript:void(12);' onclick='openssHint(12)'><i>当前版本：" + db_ss['ss_basic_version_local'] + "</i></a>");
 	$.ajax({
-		url: 'https://raw.githubusercontent.com/hq450/fancyss/master/fancyss_arm384/config.json.js',
+		url: 'https://raw.githubusercontent.com/alalbb313/ss-trojan/master/fancyss_arm384/config.json.js',
 		type: 'GET',
 		dataType: 'json',
 		success: function(res) {
@@ -2241,7 +2241,7 @@ function toggle_func() {
 		});
 	$("#update_log").click(
 		function() {
-			window.open("https://github.com/hq450/fancyss/blob/master/fancyss_hnd/Changelog.txt");
+			window.open("https://github.com/alalbb313/ss-trojan/blob/master/fancyss_hnd/Changelog.txt");
 		});
 	$("#log_content2").click(
 		function() {
@@ -3080,7 +3080,7 @@ function save_failover() {
 															</a>
 														</div>
 														<div style="display:table-cell;float: left;margin-left:270px;position: absolute;padding: 5.5px 0px;">
-															<a type="button" class="ss_btn" target="_blank" href="https://github.com/hq450/fancyss/blob/master/fancyss_hnd/Changelog.txt">更新日志</a>
+															<a type="button" class="ss_btn" target="_blank" href="https://github.com/alalbb313/ss-trojan/blob/master/fancyss_hnd/Changelog.txt">更新日志</a>
 														</div>
 														<div style="display:table-cell;float: left;margin-left:350px;position: absolute;padding: 5.5px 0px;">
 															<a type="button" class="ss_btn" href="javascript:void(0);" onclick="pop_help()">插件帮助</a>
@@ -3556,17 +3556,17 @@ function save_failover() {
 													$('#table_rules').forms([
 														{ title: 'gfwlist域名数量', multi: [
 															{ suffix: '<em>'+ gfwl +'</em>&nbsp;条，版本：' },
-															{ suffix: '<a href="https://github.com/hq450/fancyss/blob/master/rules/gfwlist.conf" target="_blank">' },
+															{ suffix: '<a href="https://github.com/alalbb313/ss-trojan/blob/master/rules/gfwlist.conf" target="_blank">' },
 															{ suffix: '<i><% nvram_get("update_ipset"); %></i></a>' },
 														]},
 														{ title: '大陆白名单IP段数量', multi: [
 															{ suffix: '<em>'+ chnl +'</em>&nbsp;行，包含 <em>' + chnn + '</em>&nbsp;个ip地址，版本：' },
-															{ suffix: '<a href="https://github.com/hq450/fancyss/blob/master/rules/chnroute.txt" target="_blank">' },
+															{ suffix: '<a href="https://github.com/alalbb313/ss-trojan/blob/master/rules/chnroute.txt" target="_blank">' },
 															{ suffix: '<i><% nvram_get("update_chnroute"); %></i></a>' },
 														]},
 														{ title: '国内域名数量（cdn名单）', multi: [
 															{ suffix: '<em>'+ cdnn +'</em>&nbsp;条，版本：' },
-															{ suffix: '<a href="https://github.com/hq450/fancyss/blob/master/rules/cdn.txt" target="_blank">' },
+															{ suffix: '<a href="https://github.com/alalbb313/ss-trojan/blob/master/rules/cdn.txt" target="_blank">' },
 															{ suffix: '<i><% nvram_get("update_cdn"); %></i></a>' },
 														]},
 														{ title: '规则定时更新任务', hint:'44', multi: [

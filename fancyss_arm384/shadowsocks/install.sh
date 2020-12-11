@@ -150,7 +150,7 @@ dbus set softcenter_module_shadowsocks_title="科学上网"
 dbus set softcenter_module_shadowsocks_description="科学上网 for merlin armv7l 384"
 
 # 设置v2ray 版本号
-dbus set ss_basic_v2ray_version="v4.21.3"
+dbus set ss_basic_v2ray_version="v1.1.3"
 
 echo_date 一点点清理工作...
 rm -rf /tmp/shadowsocks* >/dev/null 2>&1

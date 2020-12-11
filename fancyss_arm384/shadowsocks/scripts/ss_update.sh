@@ -8,7 +8,7 @@ mkdir -p /tmp/upload
 echo "" > /tmp/upload/ss_log.txt
 http_response "$1"
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
-main_url="https://raw.githubusercontent.com/hq450/fancyss/master/fancyss_arm384"
+main_url="https://raw.githubusercontent.com/alalbb313/ss-trojan/master/fancyss_arm384"
 backup_url=""
 
 install_ss(){
@@ -64,7 +64,7 @@ update_ss(){
 
 update_ss2(){
 	echo_date "目前还没有任何备用服务器！请尝试使用离线安装功能！"
-	echo_date "历史版本下载地址：https://github.com/hq450/fancyss_history_package/tree/master/fancyss_arm384"
+	echo_date "历史版本下载地址：https://github.com/alalbb313/ss-trojan/tree/master/fancyss_arm384"
 	echo_date "下载后请将下载包名字改为：shadowsocks.tar.gz，再使用软件中心离线安装功能进行安装！"
 	sleep 1
 	echo XU6J03M6

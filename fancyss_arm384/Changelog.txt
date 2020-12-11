@@ -1,5 +1,12 @@
 fancyss_arm384 Changelog
 ===========================================
+1.0.6
+   - add 添加xray支持，支持xray特性：flow 允许 “xtls-rprx-splice”
+   - info 更新xray为最新1.1.3版本，详细更新信息：https://github.com/XTLS/Xray-core/releases/tag/v1.1.3
+
+1.0.5
+   - add 添加trojan支持。
+
 1.0.4
    - info	同步fancyss_hnd 1.7.2 - 1.8.1之间的更新：https://github.com/hq450/fancyss/blob/master/fancyss_hnd/Changelog.txt，具体如下：
    - add	添加SmartDNS支持；
