@@ -16,7 +16,7 @@ sed -i 's/\tdetect_package/\t# detect_package/g' /koolshare/scripts/ks_tar_insta
 ```bash
 cd /koolshare/res
 rm shadowsocks.css
-wget --no-check-certificate https://raw.githubusercontent.com/hq450/fancyss/master/fancyss_hnd/shadowsocks/rog/res/shadowsocks.css
+wget --no-check-certificate https://raw.githubusercontent.com/alalbb313/ss-trojan/master/fancyss_arm384/shadowsocks/rog/res/shadowsocks.css
 ```
 运行完毕后进入科学上网插件，使用ctrl + F5强制刷新浏览器缓存。
 
@@ -27,7 +27,7 @@ wget --no-check-certificate https://raw.githubusercontent.com/hq450/fancyss/mast
 
 > 下面的表格列出了各个不同版本fancyss对固件/平台/架构等的支持情况，以及不同fancyss对一些功能/特性的支持情况，对应的文字说明请见下文。
 
-|               |                         fancyss_hnd                          |                        fancyss_arm384                        |                         fancyss_arm                          |                        fancyss_mipsel                        |                         fancyss_x64                          |
+|               |                         fancyss_arm384                          |                        fancyss_arm384                        |                         fancyss_arm                          |                        fancyss_mipsel                        |                         fancyss_x64                          |
 | :-----------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
 |   固件来源    |                          koolshare                           |                          koolshare                           |                          koolshare                           |                          koolshare                           |                          koolshare                           |
 |     固件      |                      梅林改版/华硕官改                       |                         梅林384改版                          |                         梅林380改版                          |                           梅林改版                           |                        LEDE by fw867                         |
@@ -59,18 +59,18 @@ wget --no-check-certificate https://raw.githubusercontent.com/hq450/fancyss/mast
 |  固件下载-6   | [RAX80 梅林改版](https://koolshare.cn/thread-177255-1-1.html) |                                                              |                                                              |                                                              |                                                              |
 |  固件下载-7   | [TUF-AX3000 官改固件](https://koolshare.cn/thread-179968-1-1.html) |                                                              |                                                              |                                                              |                                                              |
 |  固件下载-8   | [RT-AX86U 官改固件](https://koolshare.cn/thread-181845-1-1.html) |                                                              |                                                              |                                                              |                                                              |
-|   更新日志    | [Changelog.txt](https://github.com/hq450/fancyss/blob/master/fancyss_hnd/Changelog.txt) | [Changelog.txt](https://github.com/hq450/fancyss/blob/master/fancyss_arm384/Changelog.txt) | [Changelog.txt](https://github.com/hq450/fancyss/blob/master/fancyss_arm/Changelog.txt) |                             null                             | [Changelog.txt](https://github.com/hq450/fancyss/blob/master/fancyss_X64/Changelog.txt) |
-|  离线包下载   | [fancyss_hnd](https://github.com/hq450/fancyss_history_package/tree/master/fancyss_hnd) | [fancyss_arm384](https://github.com/hq450/fancyss_history_package/tree/master/fancyss_arm384) | [fancyss_arm](https://github.com/hq450/fancyss_history_package/tree/master/fancyss_arm) | [fancyss_mipsel](https://github.com/hq450/fancyss_history_package/tree/master/fancyss_mipsel) | [fancyss_x64](https://github.com/hq450/fancyss_history_package/tree/master/fancyss_X64) |
+|   更新日志    | [Changelog.txt](https://github.com/alalbb313/ss-trojan/blob/master/fancyss_arm384/Changelog.txt) | [Changelog.txt](https://github.com/alalbb313/ss-trojan/blob/master/fancyss_arm384/Changelog.txt) | [Changelog.txt](https://github.com/alalbb313/ss-trojan/blob/master/fancyss_arm/Changelog.txt) |                             null                             | [Changelog.txt](https://github.com/alalbb313/ss-trojan/blob/master/fancyss_X64/Changelog.txt) |
+|  离线包下载   | [fancyss_arm384](https://github.com/alalbb313/ss-trojan_history_package/tree/master/fancyss_arm384) | [fancyss_arm384](https://github.com/alalbb313/ss-trojan_history_package/tree/master/fancyss_arm384) | [fancyss_arm](https://github.com/alalbb313/ss-trojan_history_package/tree/master/fancyss_arm) | [fancyss_mipsel](https://github.com/alalbb313/ss-trojan_history_package/tree/master/fancyss_mipsel) | [fancyss_x64](https://github.com/alalbb313/ss-trojan_history_package/tree/master/fancyss_X64) |
 
 
 
 ## 机型/固件支持（文字版）
 
-### [fancyss_hnd](https://github.com/hq450/fancyss/tree/master/fancyss_hnd)
+### [fancyss_arm384](https://github.com/alalbb313/ss-trojan/tree/master/fancyss_arm384)
 
-> **fancyss_hnd**离线安装包仅能在koolshare 梅林/官改 hnd/axhnd/axhnd.675x平台机器上使用！具体支持机型如下：
+> **fancyss_arm384**离线安装包仅能在koolshare 梅林/官改 hnd/axhnd/axhnd.675x平台机器上使用！具体支持机型如下：
 
-#### fancyss_hnd 支持机型/固件：
+#### fancyss_arm384 支持机型/固件：
 
 | 机型/固件下载                                                | 类型   | 平台       | CPU     | 架构  | 支持版本 | 皮肤        |
 | ------------------------------------------------------------ | ------ | ---------- | ------- | ----- | -------- | ----------- |
@@ -85,23 +85,23 @@ wget --no-check-certificate https://raw.githubusercontent.com/hq450/fancyss/mast
 
 #### 注意：
 
-* fancyss_hnd目前仅支持以上改版固件机型，其它架构/平台固件，原版固件均不能使用fancyss_hnd！
-* 使用fancyss_hnd科学上网插件，强烈建议使用chrome或者chrouium内核的浏览器！以保证最佳兼容性！
-* 强烈建议在`最新版本的固件`和`最新版本软件中心`上使用fancyss_hnd！
+* fancyss_arm384目前仅支持以上改版固件机型，其它架构/平台固件，原版固件均不能使用fancyss_arm384！
+* 使用fancyss_arm384科学上网插件，强烈建议使用chrome或者chrouium内核的浏览器！以保证最佳兼容性！
+* 强烈建议在`最新版本的固件`和`最新版本软件中心`上使用fancyss_arm384！
 * RT-AC86U/GT-AC5300/GT-AX11000官改固件使用的是ROG皮肤，插件安装会自动识别机型并安装对应皮肤版本。
 * TUF-AX3000官改固件使用的是TUF橙色皮肤，插件安装会自动识别机型并安装对应皮肤版本。
 * TUF-AX3000暂时不能使用chinadns-ng，smartdns，v2ray-plugin这三个功能（1.8.3），因为这些功能使用的二进制是64位的，而BCM6750作为32位cpu是不能运行的，后期版本将逐渐添加支持。
-* RT-AX86U和TUF-AX3000两款机型因为是较新的官改固件，只有fancyss_hnd 1.8.3及以上版本能正常使用。
+* RT-AX86U和TUF-AX3000两款机型因为是较新的官改固件，只有fancyss_arm384 1.8.3及以上版本能正常使用。
 
 #### 相关链接：
 
-* fancyss_hnd离线包：[https://github.com/hq450/fancyss_history_package/tree/master/fancyss_hnd](https://github.com/hq450/fancyss_history_package/tree/master/fancyss_hnd)
-* fancyss_hnd更新日志：https://github.com/hq450/fancyss/blob/master/fancyss_hnd/Changelog.txt
-* fancyss_hnd机型的固件下载地址：[http://koolshare.cn/forum-96-1.html](http://koolshare.cn/forum-96-1.html)
+* fancyss_arm384离线包：[https://github.com/alalbb313/ss-trojan_history_package/tree/master/fancyss_arm384](https://github.com/alalbb313/ss-trojan_history_package/tree/master/fancyss_arm384)
+* fancyss_arm384更新日志：https://github.com/alalbb313/ss-trojan/blob/master/fancyss_arm384/Changelog.txt
+* fancyss_arm384机型的固件下载地址：[http://koolshare.cn/forum-96-1.html](http://koolshare.cn/forum-96-1.html)
 
 ----
 
-### [fancyss_arm384](https://github.com/hq450/fancyss/tree/master/fancyss_arm)
+### [fancyss_arm384](https://github.com/alalbb313/ss-trojan/tree/master/fancyss_arm)
 
 > **fancyss_arm384**离线安装包仅能在koolshare 梅林 arm 384平台，且linux内核为2.6.36.4的armv7架构的机器上使用！
 
@@ -117,13 +117,13 @@ wget --no-check-certificate https://raw.githubusercontent.com/hq450/fancyss/mast
 
 #### 相关链接：
 
-* arm384机型的科学上网离线包：[https://github.com/hq450/fancyss_history_package/tree/master/fancyss_arm384](https://github.com/hq450/fancyss_history_package/tree/master/fancyss_arm384)
-* arm384机型的科学上网更新日志：https://github.com/hq450/fancyss/blob/master/fancyss_arm384/Changelog.txt
+* arm384机型的科学上网离线包：[https://github.com/alalbb313/ss-trojan_history_package/tree/master/fancyss_arm384](https://github.com/alalbb313/ss-trojan_history_package/tree/master/fancyss_arm384)
+* arm384机型的科学上网更新日志：https://github.com/alalbb313/ss-trojan/blob/master/fancyss_arm384/Changelog.txt
 * arm384机型的固件下载地址：[https://koolshare.cn/thread-164857-1-1.html](https://koolshare.cn/thread-164857-1-1.html)
 
 ----
 
-### [fancyss_arm](https://github.com/hq450/fancyss/tree/master/fancyss_arm)（停止维护）
+### [fancyss_arm](https://github.com/alalbb313/ss-trojan/tree/master/fancyss_arm)（停止维护）
 
 > **fancyss_arm 停止维护通知：**
 >
@@ -155,13 +155,13 @@ wget --no-check-certificate https://raw.githubusercontent.com/hq450/fancyss/mast
 
 #### 相关链接：
 
-* arm机型的科学上网离线包：[https://github.com/hq450/fancyss_history_package/tree/master/fancyss_arm](https://github.com/hq450/fancyss_history_package/tree/master/fancyss_arm)
-* arm机型的科学上网更新日志：https://github.com/hq450/fancyss/blob/master/fancyss_arm/Changelog.txt
+* arm机型的科学上网离线包：[https://github.com/alalbb313/ss-trojan_history_package/tree/master/fancyss_arm](https://github.com/alalbb313/ss-trojan_history_package/tree/master/fancyss_arm)
+* arm机型的科学上网更新日志：https://github.com/alalbb313/ss-trojan/blob/master/fancyss_arm/Changelog.txt
 * arm机型的固件下载地址：[http://koolshare.cn/forum-96-1.html](http://koolshare.cn/forum-96-1.html)
 
 ----
 
-### [fancyss_mipsel](https://github.com/hq450/fancyss/tree/master/fancyss_mipsel) （停止维护）
+### [fancyss_mipsel](https://github.com/alalbb313/ss-trojan/tree/master/fancyss_mipsel) （停止维护）
 
 > 适用于merlin koolshare mipsel架构机型的改版固件，由于mipsel架构老旧且性能较低，此架构机型的科学上网插件已经不再维护，最后的版本是3.0.4，此处作为仓库搬迁后的备份留存。
 
@@ -171,14 +171,14 @@ wget --no-check-certificate https://raw.githubusercontent.com/hq450/fancyss/mast
 
 #### 相关链接：
 
-* mipsel机型的科学上网离线包：[https://github.com/hq450/fancyss_history_package/tree/master/fancyss_mipsel](https://github.com/hq450/fancyss_history_package/tree/master/fancyss_mipsel)
+* mipsel机型的科学上网离线包：[https://github.com/alalbb313/ss-trojan_history_package/tree/master/fancyss_mipsel](https://github.com/alalbb313/ss-trojan_history_package/tree/master/fancyss_mipsel)
 * mipsel机型的固件下载地址：[http://koolshare.cn/forum-96-1.html](http://koolshare.cn/forum-96-1.html)
 
 ----
 
-### [fancyss_X64](https://github.com/hq450/fancyss/tree/master/fancyss_X64) （备份留存）
+### [fancyss_X64](https://github.com/alalbb313/ss-trojan/tree/master/fancyss_X64) （备份留存）
 
 > 适用于koolshare OpenWRT/LEDE X64 带酷软的固件，由于该固件酷软下架了koolss插件，本项目将其收入。
 
 #### 相关链接：
-* koolshare OpenWRT/LEDE X64机型的科学上网离线包：[https://github.com/hq450/fancyss_history_package/tree/master/fancyss_X64](https://github.com/hq450/fancyss_history_package/tree/master/fancyss_X64)
+* koolshare OpenWRT/LEDE X64机型的科学上网离线包：[https://github.com/alalbb313/ss-trojan_history_package/tree/master/fancyss_X64](https://github.com/alalbb313/ss-trojan_history_package/tree/master/fancyss_X64)
