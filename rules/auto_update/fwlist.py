@@ -31,7 +31,7 @@ baseurl = 'https://raw.githubusercontent.com/Loukky/gfwlist-by-loukky/master/gfw
 # match comments/title/whitelist/ip address
 comment_pattern = '^\!|\[|^@@|^\d+\.\d+\.\d+\.\d+'
 domain_pattern = '([\w\-\_]+\.[\w\.\-\_]+)[\/\*]*' 
-tmpfile = '/tmp/gfwlisttmp'
+tmpfile = 'gfwlisttmp'
 # do not write to router internal flash directly
 #outfile = '/tmp/gfwlist.conf'
 #rulesfile = '/etc/dnsmasq.d/gfwlist.conf'
@@ -48,7 +48,7 @@ content = str(base64.b64decode(urllib2.urlopen(baseurl, timeout=15).read()))
 tfs = open(tmpfile, 'w+')
 tfs.write(content)
 tfs.close()
-tfs = open(tmpfile, 'r')
+tfs = open(tmpfile, 'r+')
  
 print("page content fetched, analysis...")
  
@@ -78,7 +78,7 @@ for line in tfs.readlines():
 					
 tfs.close()	
 fs.close();
- 
+os.remove(tmpfile) 
 #print 'moving generated file to dnsmasg directory'
 #print outfile
 #shutil.move(outfile, rulesfile)
