@@ -23,7 +23,7 @@ get_china_status(){
 }
 
 get_foreign_status(){
-	local ret=`httping www.google.com.tw -s -Z -c1 -f -t 3 2>/dev/null|sed -n '2p'|sed 's/seq=0//g'|sed 's/([0-9]\+\sbytes),\s//g'`
+	local ret=`httping www.google.com -s -Z -c1 -f -t 3 2>/dev/null|sed -n '2p'|sed 's/seq=0//g'|sed 's/([0-9]\+\sbytes),\s//g'`
 	[ "$ss_failover_enable" == "1" ] && echo $LOGTIME1 $ret "[`dbus get ssconf_basic_name_$CURRENT`]" $1 >> $LOGFILE_F
 	local S1=`echo $ret|grep -Eo "200 OK"`
 	if [ -n "$S1" ]; then
