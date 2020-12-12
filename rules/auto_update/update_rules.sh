@@ -77,7 +77,7 @@ else
 	echo update cdn! 
 	cp -f cdn1.txt ../cdn.txt
 	row=`wc -l ../cdn.txt | awk '{print $1}'`
-	sed -i "4c $(date +%Y-%m-%d) # $md5sum5 cdn row: $row" ../version1
+	sed -i "3c $(date +%Y-%m-%d) # $md5sum5 cdn row: $row" ../version1
 fi
 echo =================
 # ======================================
@@ -110,7 +110,7 @@ else
 	echo update Routing!
 	cp Routing.txt ../Routing.txt
 	row=`wc -l ../Routing.txt | awk '{print $1}'`
-	sed -i "5c $(date +%Y-%m-%d) # $md5sum9 Routing row: $row" ../version1
+	sed -i "4c $(date +%Y-%m-%d) # $md5sum9 Routing row: $row" ../version1
 fi
 echo =================
 # ======================================
@@ -137,7 +137,7 @@ else
 	echo update WhiteList!
 	cp -f WhiteList.txt ../WhiteList.txt
 	row=`wc -l ../WhiteList.txt | awk '{print $1}'`
-	sed -i "6c $(date +%Y-%m-%d) # $md5sum7 WhiteList row: $row" ../version1
+	sed -i "5c $(date +%Y-%m-%d) # $md5sum7 WhiteList row: $row" ../version1
 fi
 echo =================
 
@@ -168,7 +168,7 @@ else
 	echo update WhiteList_new!
 	cp WhiteList_new.txt ../WhiteList_new.txt
 	row=`wc -l ../WhiteList_new.txt | awk '{print $1}'`
-	sed -i "7c $(date +%Y-%m-%d) # $md5sum11 WhiteList_new row: $row" ../version1
+	sed -i "6c $(date +%Y-%m-%d) # $md5sum11 WhiteList_new row: $row" ../version1
 fi
 echo =================
 
@@ -190,7 +190,7 @@ else
 	echo update apple china list!
 	cp -f apple_download.txt ../apple_china.txt
 	row=`wc -l ../apple_china.txt | awk '{print $1}'`
-	sed -i "8c $(date +%Y-%m-%d) # $md5sum13 apple_china row: $row" ../version1
+	sed -i "7c $(date +%Y-%m-%d) # $md5sum13 apple_china row: $row" ../version1
 fi
 if [ "$md5sum15"x = "$md5sum16"x ]; then
 	echo google china list same md5!
@@ -198,7 +198,7 @@ else
 	echo update goole china list!
 	cp -f google_download.txt ../google_china.txt
 	row=`wc -l ../google_china.txt | awk '{print $1}'`
-	sed -i "9c $(date +%Y-%m-%d) # $md5sum15 google_china row: $row" ../version1
+	sed -i "8c $(date +%Y-%m-%d) # $md5sum15 google_china row: $row" ../version1
 fi
 echo =================
 # ======================================
