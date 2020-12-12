@@ -855,8 +855,8 @@ create_dnsmasq_conf() {
 	# these sites need to go ss inside router
 	if [ "$ss_basic_mode" != "6" ]; then
 		echo "#for router itself" >>/tmp/wblist.conf
-		echo "server=/.google.com/127.0.0.1#$DNSF_PORT" >>/tmp/wblist.conf
-		echo "ipset=/.google.com/router" >>/tmp/wblist.conf
+		echo "server=/.google.com.tw/127.0.0.1#$DNSF_PORT" >>/tmp/wblist.conf
+		echo "ipset=/.google.com.tw/router" >>/tmp/wblist.conf
 		echo "server=/dns.google.com/127.0.0.1#$DNSF_PORT" >>/tmp/wblist.conf
 		echo "ipset=/dns.google.com/router" >>/tmp/wblist.conf
 		echo "server=/.github.com/127.0.0.1#$DNSF_PORT" >>/tmp/wblist.conf
@@ -2498,8 +2498,8 @@ httping_check() {
 	fi
 	echo "--------------------------------------------------------------------------------------"
 	echo "检查国外可用性..."
-	#httping www.google.com -s -Z --proxy 127.0.0.1:23456 -5 -r --ts -c 5
-	httping www.google.com -s -Z -5 -r --ts -c 10 -i 0.5 -t 2
+	#httping www.google.com.tw -s -Z --proxy 127.0.0.1:23456 -5 -r --ts -c 5
+	httping www.google.com.tw -s -Z -5 -r --ts -c 10 -i 0.5 -t 2
 	if [ "$?" != "0" ]; then
 		echo "当前节点无法访问国外网络！"
 		echo "自动切换到下一个节点..."
