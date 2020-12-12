@@ -19,7 +19,7 @@ sync_v2ray_binary(){
 	md5_old=`md5sum shadowsocks/bin//v2ray | sed 's/ /\n/g'| sed -n 1p`
 	if [ "$md5_latest"x != "$md5_old"x ]; then
 		echo update v2ray binary！
-		cp -rf ../v2ray_binary/$v2ray_version/xray shadowsocks/bin/v2ray
+		cp -rf ../xray_binary/$v2ray_version/xray shadowsocks/bin/v2ray
 		#cp -rf ../v2ray_binary/$v2ray_version/v2ctl shadowsocks/bin/
 	fi
 }
