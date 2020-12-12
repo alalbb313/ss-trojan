@@ -182,7 +182,7 @@ md5sum14=$(md5sum ../apple_china.txt | sed 's/ /\n/g' | sed -n 1p)
 
 md5sum15=$(md5sum google_download.txt | sed 's/ /\n/g' | sed -n 1p)
 md5sum16=$(md5sum ../google_china.txt | sed 's/ /\n/g' | sed -n 1p)
-
+1
 echo =================
 if [ "$md5sum13"x = "$md5sum14"x ]; then
 	echo apple china list same md5!
