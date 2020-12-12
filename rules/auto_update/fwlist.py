@@ -7,7 +7,8 @@
 # Ref https://code.google.com/p/autoproxy-gfwlist/wiki/Rules    
  
 import sys
-import urllib2 
+import urllib.request as urllib2
+import urllib 
 import re
 import os
 import datetime
@@ -35,16 +36,16 @@ tmpfile = '/tmp/gfwlisttmp'
 #outfile = '/tmp/gfwlist.conf'
 #rulesfile = '/etc/dnsmasq.d/gfwlist.conf'
  
-fs =  file(outfile, 'w')
+fs =  open(outfile, 'w+')
 #fs.write('# gfw list ipset rules for dnsmasq\n')
 #fs.write('# updated on ' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + '\n')
 #fs.write('#\n')
  
 print("fetching list...")
-content = urllib2.urlopen(baseurl, timeout=15).read().decode('base64')
- 
+content = str(base64.b64decode(urllib2.urlopen(baseurl, timeout=15).read()))
+
 # write the decoded content to file then read line by line
-tfs = open(tmpfile, 'w')
+tfs = open(tmpfile, 'w+')
 tfs.write(content)
 tfs.close()
 tfs = open(tmpfile, 'r')
