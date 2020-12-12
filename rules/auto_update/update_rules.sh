@@ -27,8 +27,8 @@ if [ "$md5sum1"x = "$md5sum2"x ]; then
 	echo gfwlist same md5!
 else
 	echo update gfwlist!
-	row = `wc -l gfwlist1.conf`
 	cp -f gfwlist1.conf ../gfwlist.conf
+	row=`wc -l ../gfwlist.conf | awk '{print $1}'`
 	sed -i "1c $(date +%Y-%m-%d) # $md5sum1 gfwlist row: $row" ../version1
 fi
 echo =================
@@ -52,8 +52,8 @@ else
 	IPLINE=$(cat chnroute1.txt | wc -l)
 	IPCOUN=$(awk -F "/" '{sum += 2^(32-$2)-2};END {print sum}' chnroute1.txt)
 	echo update chnroute, $IPLINE subnets, $IPCOUN unique IPs !
-	row = `wc -l chnroute1.txt`
 	cp -f chnroute1.txt ../chnroute.txt
+	row=`wc -l ../chnroute.txt | awk '{print $1}'`
 	sed -i "2c $(date +%Y-%m-%d) # $md5sum3 chnroute row: $row" ../version1
 fi
 echo =================
@@ -74,9 +74,9 @@ echo =================
 if [ "$md5sum5"x = "$md5sum6"x ]; then
 	echo cdn list same md5!
 else
-	echo update cdn!
-	row = `wc -l cdn1.txt` 
+	echo update cdn! 
 	cp -f cdn1.txt ../cdn.txt
+	row=`wc -l ../cdn.txt | awk '{print $1}'`
 	sed -i "4c $(date +%Y-%m-%d) # $md5sum5 cdn row: $row" ../version1
 fi
 echo =================
@@ -108,8 +108,8 @@ if [ "$md5sum9"x = "$md5sum10"x ]; then
 	echo Routing same md5!
 else
 	echo update Routing!
-	row = `wc -l Routing.txt`
 	cp Routing.txt ../Routing.txt
+	row=`wc -l ../Routing.txt | awk '{print $1}'`
 	sed -i "5c $(date +%Y-%m-%d) # $md5sum9 Routing row: $row" ../version1
 fi
 echo =================
@@ -135,8 +135,8 @@ if [ "$md5sum7"x = "$md5sum8"x ]; then
 	echo WhiteList same md5!
 else
 	echo update WhiteList!
-	row = `wc -l WhiteList.txt`
 	cp -f WhiteList.txt ../WhiteList.txt
+	row=`wc -l ../WhiteList.txt | awk '{print $1}'`
 	sed -i "6c $(date +%Y-%m-%d) # $md5sum7 WhiteList row: $row" ../version1
 fi
 echo =================
@@ -166,8 +166,8 @@ if [ "$md5sum11"x = "$md5sum12"x ]; then
 	echo WhiteList_new same md5!
 else
 	echo update WhiteList_new!
-	row = `wc -l WhiteList_new.txt`
 	cp WhiteList_new.txt ../WhiteList_new.txt
+	row=`wc -l ../WhiteList_new.txt | awk '{print $1}'`
 	sed -i "7c $(date +%Y-%m-%d) # $md5sum11 WhiteList_new row: $row" ../version1
 fi
 echo =================
@@ -188,16 +188,16 @@ if [ "$md5sum13"x = "$md5sum14"x ]; then
 	echo apple china list same md5!
 else
 	echo update apple china list!
-	row = `wc -l apple_download.txt`
 	cp -f apple_download.txt ../apple_china.txt
+	row=`wc -l ../apple_china.txt | awk '{print $1}'`
 	sed -i "8c $(date +%Y-%m-%d) # $md5sum13 apple_china row: $row" ../version1
 fi
 if [ "$md5sum15"x = "$md5sum16"x ]; then
 	echo google china list same md5!
 else
 	echo update goole china list!
-	row = `wc -l google_download.txt`
 	cp -f google_download.txt ../google_china.txt
+	row=`wc -l ../google_china.txt | awk '{print $1}'`
 	sed -i "9c $(date +%Y-%m-%d) # $md5sum15 google_china row: $row" ../version1
 fi
 echo =================
