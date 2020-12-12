@@ -3016,7 +3016,7 @@ function save_failover() {
 										</div>
 										<!-- this is the popup area for foreign status -->
 										<div id="ssf_status_div"  class="content_status" style="box-shadow: 3px 3px 10px #000;margin-top: -20px;display: none;margin-left:0px;width:748px;">
-											<div class="user_title">国外历史状态 - www.google.com.tw</div>
+											<div class="user_title">国外历史状态 - www.google.com</div>
 											<div style="margin-left:15px"><i>&nbsp;&nbsp;此功能仅在开启故障转移时生效。</i></div>
 											<div style="margin: 10px 10px 10px 10px;width:98%;text-align:center;overflow:hidden;">
 												<textarea cols="63" rows="36" wrap="off" id="log_content_f" style="width:98%;padding-left:13px;padding-right:33px;border:0px solid #222;font-family:'Lucida Console'; font-size:11px;background: transparent;color:#FFFFFF;outline: none;overflow-x:hidden;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
