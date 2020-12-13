@@ -2,7 +2,8 @@ fancyss_arm384 Changelog
 ===========================================
 1.0.6
    - add 添加xray支持，支持xray特性：flow 允许 “xtls-rprx-splice”
-   - info 更新xray为最新1.1.3版本，详细更新信息：https://github.com/XTLS/Xray-core/releases/tag/v1.1.3
+   - update 更新xray为最新1.1.3版本，详细更新信息：https://github.com/XTLS/Xray-core/releases/tag/v1.1.3
+   - fix 修复插件运行状态的延迟检测
 
 1.0.5
    - add 添加trojan支持。
