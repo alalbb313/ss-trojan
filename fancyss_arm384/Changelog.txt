@@ -1,15 +1,15 @@
 fancyss_arm384 Changelog
 ===========================================
 1.0.6
-   - add 添加xray支持，支持xray特性：flow 允许 “xtls-rprx-splice”
-   - update 更新xray为最新1.1.3版本，详细更新信息：https://github.com/XTLS/Xray-core/releases/tag/v1.1.3
-   - fix 修复插件运行状态的延迟检测
+   - add	添加xray支持，支持xray特性：flow 允许 “xtls-rprx-splice”
+   - update	更新xray为最新1.1.3版本，详细更新信息：https://github.com/XTLS/Xray-core/releases/tag/v1.1.3
+   - fix	修复插件运行状态的延迟检测
 
 1.0.5
-   - add 添加trojan支持。
+   - add	添加trojan支持。
 
 1.0.4
-   - info	同步fancyss_arm384 1.7.2 - 1.8.1之间的更新：https://github.com/alalbb313/ss-trojan/blob/master/fancyss_arm384/Changelog.txt，具体如下：
+   - info	同步fancyss_arm384 1.7.2 - 1.8.1之间的更新，具体如下：
    - add	添加SmartDNS支持；
    - add	新增Shadowsocks的v2ray-plugin支持；
    - add	现在ssr订阅功能支持订阅部分节点，请前往【更新管理】中的[排除]关键词和[包括]关键词设置；
