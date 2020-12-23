@@ -13,7 +13,7 @@ backup_url=""
 
 install_ss(){
 	echo_date 开始解压压缩包...
-	tar -zxf shadowsocks.tar.gz
+	tar -zxf shadowsocks*.tar.gz
 	chmod a+x /tmp/shadowsocks/install.sh
 	echo_date 开始安装更新文件...
 	sh /tmp/shadowsocks/install.sh
@@ -33,8 +33,8 @@ update_ss(){
 			cd /tmp
 			md5_web1=`curl -s "$main_url"/version | sed -n 2p`
 			echo_date 开启下载进程，从主服务器上下载更新包...
-			wget --no-check-certificate --timeout=5 "$main_url"/shadowsocks.tar.gz
-			md5sum_gz=`md5sum /tmp/shadowsocks.tar.gz | sed 's/ /\n/g'| sed -n 1p`
+			wget --no-check-certificate --timeout=5 "$main_url"/shadowsocks_$ss_basic_version_web1.tar.gz
+			md5sum_gz=`md5sum /tmp/shadowsocks_$ss_basic_version_web1.tar.gz | sed 's/ /\n/g'| sed -n 1p`
 			if [ "$md5sum_gz" != "$md5_web1" ]; then
 				echo_date 更新包md5校验不一致！估计是下载的时候出了什么状况，请等待一会儿再试...
 				rm -rf /tmp/shadowsocks* >/dev/null 2>&1
