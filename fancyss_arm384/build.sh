@@ -24,6 +24,16 @@ sync_v2ray_binary(){
 	fi
 }
 
+sync_trojan_binary(){
+	trojan_version=`cat ../trojan-go_binary/latest.txt`
+	md5_latest=`md5sum ../trojan-go_binary/$trojan_version/trojan-go | sed 's/ /\n/g'| sed -n 1p`
+	md5_old=`md5sum shadowsocks/bin//trojan | sed 's/ /\n/g'| sed -n 1p`
+	if [ "$md5_latest"x != "$md5_old"x ]; then
+		echo update v2ray binary！
+		cp -rf ../trojan-go_binary/$trojan_version/trojan-go shadowsocks/bin/trojan
+	fi
+}
+
 do_build() {
 	if [ "$VERSION" = "" ]; then
 		echo "version not found"
@@ -70,5 +80,6 @@ do_backup(){
 
 cp_rules
 sync_v2ray_binary
+sync_trojan_binary
 do_build
 do_backup
