@@ -30,10 +30,10 @@ do_build() {
 		exit 3
 	fi
 	
-	rm -f ${MODULE}.tar.gz
+	rm -f ${MODULE}_v$VERSION.tar.gz
 	rm -f $MODULE/.DS_Store
 	rm -f $MODULE/*/.DS_Store
-	tar -zcvf ${MODULE}.tar.gz $MODULE
+	tar -zcvf ${MODULE}_v$VERSION.tar.gz $MODULE
 	md5value=`md5sum ${MODULE}_v$VERSION.tar.gz|tr " " "\n"|sed -n 1p`
 	cat > ./version <<-EOF
 	$VERSION

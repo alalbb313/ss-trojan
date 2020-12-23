@@ -1,1 +1,2 @@
-a77561ccbabf5ab9608145e0aac7e9f5 shadowsocks_1.0.6.tar.gz
+shadowsocks_v1.0.6.tar.gz
+5039656f96d496cee70a5978f8078948 shadowsocks_v1.0.7.tar.gz

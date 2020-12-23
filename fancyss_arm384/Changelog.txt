@@ -1,5 +1,11 @@
 fancyss_arm384 Changelog
 ===========================================
+1.0.7
+   - update	更新xray为最新1.1.4版本，详细更新信息：https://github.com/XTLS/Xray-core/releases/tag/v1.1.4
+   - fix	替换trojan 为 trojan-go
+   - update	更新xray为最新1.1.4版本，详细更新信息：https://github.com/XTLS/Xray-core/releases/tag/v1.1.4
+   - to do	添加trojan-go设置项, 添加trojan-go 更新按钮 
+
 1.0.6
    - add	添加xray支持，支持xray特性：flow 允许 “xtls-rprx-splice”
    - update	更新xray为最新1.1.3版本，详细更新信息：https://github.com/XTLS/Xray-core/releases/tag/v1.1.3
