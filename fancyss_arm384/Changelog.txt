@@ -3,7 +3,7 @@ fancyss_arm384 Changelog
 1.0.7
    - update	更新xray为最新1.1.4版本，详细更新信息：https://github.com/XTLS/Xray-core/releases/tag/v1.1.4
    - fix	替换trojan 为 trojan-go
-   - update	更新xray为最新1.1.4版本，详细更新信息：https://github.com/XTLS/Xray-core/releases/tag/v1.1.4
+   - update	更新trojan-go为最新0.8.2版本，详细更新信息：https://github.com/p4gefau1t/trojan-go/releases/tag/v0.8.2
    - to do	添加trojan-go设置项, 添加trojan-go 更新按钮 
 
 1.0.6
