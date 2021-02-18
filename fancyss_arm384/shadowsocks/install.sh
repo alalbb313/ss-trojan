@@ -12,15 +12,15 @@ mkdir -p /tmp/upload
 case $(uname -m) in
 	armv7l)
 		if [ "`uname -o|grep Merlin`" ] && [ -d "/koolshare" ] && [ -n "`nvram get buildno|grep 384`" ] || [ -n "`nvram get buildno|grep 386`" ];then
-			echo_date 固件平台【koolshare merlin armv7l 384】符合安装要求，开始安装插件！
+			echo_date 固件平台【koolshare merlin armv7l 384或386】符合安装要求，开始安装插件！
 		else
-			echo_date 本插件适用于【koolshare merlin armv7l 384和386】固件平台，你的固件平台不能安装！！！
+			echo_date 本插件适用于【koolshare merlin armv7l 384或386】固件平台，你的固件平台不能安装！！！
 			echo_date 退出安装！
 			exit 1
 		fi
 		;;
 	*)
-		echo_date 本插件适用于【koolshare merlin armv7l 384和386】固件平台，你的平台：$(uname -m)不能安装！！！
+		echo_date 本插件适用于【koolshare merlin armv7l 384或386】固件平台，你的平台：$(uname -m)不能安装！！！
 		echo_date 退出安装！
 		exit 1
 	;;
