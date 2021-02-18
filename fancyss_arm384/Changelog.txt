@@ -1,5 +1,7 @@
 fancyss_arm384 Changelog
 ===========================================
+1.0.9
+   - update	更新xray为最新1.3.0版本，详细更新信息：https://github.com/XTLS/Xray-core/releases/tag/v1.3.0
 1.0.8
    - update	更新xray为最新1.2.0版本，详细更新信息：https://github.com/XTLS/Xray-core/releases/tag/v1.2.0
 
