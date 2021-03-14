@@ -1569,14 +1569,26 @@ creat_v2ray_json() {
 			cat >>"$V2RAY_CONFIG_FILE_TMP" <<-EOF
 				"inbounds": [
 					{
-					"protocol": "dokodemo-door",
-					"port": $DNSF_PORT,
-					"settings": {
-						"address": "8.8.8.8",
-						"port": 53,
-						"network": "udp",
-						"timeout": 0,
-						"followRedirect": false
+						"port": 23456,
+						"listen": "0.0.0.0",
+						"protocol": "socks",
+						"settings": {
+							"auth": "noauth",
+							"udp": true,
+							"ip": "127.0.0.1",
+							"clients": null
+						},
+						"streamSettings": null
+					},
+					{
+						"protocol": "dokodemo-door",
+						"port": $DNSF_PORT,
+						"settings": {
+							"address": "8.8.8.8",
+							"port": 53,
+							"network": "udp",
+							"timeout": 0,
+							"followRedirect": false
 						}
 					},
 					{
@@ -1684,6 +1696,18 @@ creat_v2ray_json() {
 									\"loglevel\": \"error\"
 								},
 								\"inbounds\": [
+									{
+										\"port\": 23456,
+										\"listen\": \"0.0.0.0\",
+										\"protocol\": \"socks\",
+										\"settings\": {
+											\"auth\": \"noauth\",
+											\"udp\": true,
+											\"ip\": \"127.0.0.1\",
+											\"clients\": null
+										},
+										\"streamSettings\": null
+									},
 									{
 										\"protocol\": \"dokodemo-door\", 
 										\"port\": $DNSF_PORT,
