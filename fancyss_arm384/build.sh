@@ -15,7 +15,7 @@ cp_rules(){
 
 sync_v2ray_binary(){
 	v2ray_version=`cat ../xray_binary/latest.txt`
-	md5_latest=`md5sum ../xray_binary/$v2ray_version/xray | sed 's/ /\n/g'| sed -n 1p`
+	md5_latest=`md5sum ../xray_binary/$v2ray_version./bui	/xray | sed 's/ /\n/g'| sed -n 1p`
 	md5_old=`md5sum shadowsocks/bin//v2ray | sed 's/ /\n/g'| sed -n 1p`
 	if [ "$md5_latest"x != "$md5_old"x ]; then
 		echo update v2ray binary！
